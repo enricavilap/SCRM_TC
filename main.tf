@@ -31,3 +31,26 @@ provider "azurerm" {
 }
 
 
+module "resource_group" {
+  source   = "./modules/rg"
+  location = var.location
+  prefix   = var.prefix
+
+}
+
+module "postgree" {
+  source                    = "./modules/postgree"
+  resource_group_name       = module.resource_group.name
+  location                  = var.location
+  prefix                    = var.prefix
+  postgresql-admin-login    = var.postgresql-admin-login
+  postgresql-admin-password = var.postgresql-admin-password
+}
+
+
+module "virtual_machine" {
+  source              = "./modules/vm"
+  resource_group_name = module.resource_group.name
+  location            = var.location
+  prefix              = var.prefix
+}
